@@ -1,0 +1,52 @@
+﻿@page "/counter"
+@rendermode InteractiveServer
+
+<PageTitle>Counter</PageTitle>
+
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="bi bi-plus-square-fill text-primary mb-3" style="font-size: 3rem;"></i>
+                    <h1 class="card-title">Counter</h1>
+                    <p class="card-text text-muted">Interactive counter demonstration with Blazor Server</p>
+                </div>
+                
+                <div class="counter-display mb-4">
+                    <div class="display-1 fw-bold text-primary mb-2">@currentCount</div>
+                    <p class="text-muted mb-0" role="status">Current count value</p>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary btn-lg px-5" @onclick="IncrementCount">
+                        <i class="bi bi-plus-lg me-2"></i>Increment Counter
+                    </button>
+                    <button class="btn btn-outline-secondary btn-lg px-4 ms-md-2" @onclick="ResetCount">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Reset
+                    </button>
+                </div>
+                
+                <div class="mt-4">
+                    <small class="text-muted">
+                        Click the button above to increment the counter. This demonstrates real-time interactivity with Blazor Server.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    private void ResetCount()
+    {
+        currentCount = 0;
+    }
+}

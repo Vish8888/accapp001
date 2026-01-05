@@ -1,0 +1,52 @@
+﻿@inherits LayoutComponentBase
+
+<div class="app-container d-flex">
+    <!-- Vertical Sidebar Navigation -->
+    <nav class="sidebar bg-white border-end shadow-sm">
+        <div class="sidebar-header p-3 border-bottom">
+            <h5 class="mb-0 text-primary fw-bold">AccApp001</h5>
+        </div>
+        <div class="sidebar-nav">
+            <NavMenu />
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="main-content flex-fill d-flex flex-column">
+        <!-- Top Bar -->
+        <header class="top-bar bg-light border-bottom px-4 py-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="text-muted">Azure-Hosted Blazor Application</span>
+                <div class="d-flex gap-3">
+                    <a href="https://learn.microsoft.com/aspnet/core/" target="_blank" class="text-decoration-none text-muted">Documentation</a>
+                    <span class="text-muted">|</span>
+                    <a href="#" class="text-decoration-none text-muted">Support</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-fill overflow-auto">
+            <div class="container-fluid p-4">
+                @Body
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-light border-top px-4 py-3">
+            <div class="text-center text-muted">
+                <small>&copy; 2026 AccApp001. All rights reserved.</small>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<!-- Error UI -->
+<div id="blazor-error-ui" class="alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 9999; display: none;">
+    <div class="d-flex align-items-center">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span>An unhandled error has occurred.</span>
+        <button type="button" class="btn btn-sm btn-outline-danger ms-3 reload">Reload</button>
+        <button type="button" class="btn-close ms-2 dismiss" aria-label="Close"></button>
+    </div>
+</div>

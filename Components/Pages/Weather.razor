@@ -1,0 +1,128 @@
+﻿@page "/weather"
+@attribute [StreamRendering]
+
+<PageTitle>Weather</PageTitle>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-4">
+                    <i class="bi bi-cloud-sun-fill text-info me-3" style="font-size: 2.5rem;"></i>
+                    <div>
+                        <h1 class="card-title mb-1">Weather Forecast</h1>
+                        <p class="text-muted mb-0">5-day weather demonstration with simulated data</p>
+                    </div>
+                </div>
+
+                @if (forecasts == null)
+                {
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary mb-3" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="text-muted">Loading weather data...</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="fw-semibold">
+                                        <i class="bi bi-calendar3 me-2 text-muted"></i>Date
+                                    </th>
+                                    <th scope="col" class="fw-semibold text-center">
+                                        <i class="bi bi-thermometer-half me-2 text-muted"></i>Celsius
+                                    </th>
+                                    <th scope="col" class="fw-semibold text-center">
+                                        <i class="bi bi-thermometer-half me-2 text-muted"></i>Fahrenheit
+                                    </th>
+                                    <th scope="col" class="fw-semibold">
+                                        <i class="bi bi-cloud me-2 text-muted"></i>Conditions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var forecast in forecasts)
+                                {
+                                    <tr>
+                                        <td class="fw-medium">
+                                            @forecast.Date.ToString("dddd, MMM dd")
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-primary-subtle text-primary-emphasis px-3 py-2">
+                                                @forecast.TemperatureC°C
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-secondary-subtle text-secondary-emphasis px-3 py-2">
+                                                @forecast.TemperatureF°F
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="d-flex align-items-center">
+                                                <i class="bi @GetWeatherIcon(forecast.Summary) me-2 text-info"></i>
+                                                @forecast.Summary
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-4 p-3 bg-light rounded">
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle me-1"></i>
+                            This weather data is simulated for demonstration purposes. 
+                            In a real application, this would connect to a weather API service.
+                        </small>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private WeatherForecast[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = startDate.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = summaries[Random.Shared.Next(summaries.Length)]
+        }).ToArray();
+    }
+
+    private string GetWeatherIcon(string? summary)
+    {
+        return summary switch
+        {
+            "Freezing" => "bi-snow2",
+            "Bracing" or "Chilly" => "bi-cloud-snow",
+            "Cool" => "bi-cloudy",
+            "Mild" or "Warm" => "bi-sun",
+            "Balmy" => "bi-brightness-high",
+            "Hot" or "Sweltering" or "Scorching" => "bi-sun-fill",
+            _ => "bi-cloud-sun"
+        };
+    }
+
+    private class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string? Summary { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}

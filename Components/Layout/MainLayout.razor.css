@@ -1,0 +1,139 @@
+/* Minimal Layout Styling for Blazor Web App */
+
+/* Layout Container */
+.app-container {
+    background-color: #fafafa;
+    min-height: 100vh;
+}
+
+/* Sidebar Refinements */
+.sidebar {
+    background-color: #ffffff;
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-header {
+    background-color: #ffffff;
+    padding: 1.25rem 1.5rem;
+}
+
+/* Main Content Area */
+.main-content {
+    background-color: #fafafa;
+}
+
+.top-bar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 0.875rem 1.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Content Spacing */
+main .container-fluid {
+    padding: 2rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Card and Content Elements */
+.card, .alert, .form-control, .btn {
+    border-radius: 6px;
+    border-color: #e1e5e9;
+}
+
+.card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    margin-bottom: 1.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Typography and Spacing */
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+/* Footer Styling */
+footer {
+    background-color: #ffffff;
+    border-top: 1px solid #e8e8e8;
+    padding: 1rem 1.5rem;
+}
+
+/* Responsive Behavior */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60px;
+        min-width: 60px;
+    }
+    
+    main .container-fluid {
+        padding: 1.5rem 1rem;
+    }
+    
+    .top-bar {
+        padding: 0.75rem 1rem;
+    }
+    
+    .sidebar-header {
+        padding: 1rem 0.75rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    main .container-fluid {
+        padding: 1rem 0.75rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Light Theme Enhancements */
+.table {
+    background-color: #ffffff;
+    border-color: #e1e5e9;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    border-color: #e1e5e9;
+    font-weight: 600;
+}
+
+.form-control:focus {
+    border-color: #0078d4;
+    box-shadow: 0 0 0 0.2rem rgba(0, 120, 212, 0.25);
+}
+
+.btn-primary {
+    background-color: #0078d4;
+    border-color: #0078d4;
+}
+
+.btn-primary:hover {
+    background-color: #106ebe;
+    border-color: #106ebe;
+}
+
+/* Error UI Positioning */
+#blazor-error-ui {
+    background-color: #fff2f2;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    color: #721c24;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

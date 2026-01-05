@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AccApp001 - Azure-hosted Blazor Web Application" />
+    <meta name="author" content="AccApp001" />
+    <meta name="robots" content="index, follow" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <base href="/" />
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="accapp001.styles.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <title>AccApp001 - Azure Blazor App</title>
+    <HeadOutlet />
+</head>
+
+<body class="d-flex flex-column">
+    <div id="app" class="d-flex flex-column min-vh-100">
+        <CascadingValue Value="this">
+            <ErrorBoundary @ref="errorBoundary">
+                <ChildContent>
+                    <Routes />
+                </ChildContent>
+                <ErrorContent Context="exception">
+                    <div class="error-boundary-container">
+                        <div class="container mt-5">
+                            <div class="row justify-content-center">
+                                <div class="col-md-8 col-lg-6">
+                                    <div class="card border-danger">
+                                        <div class="card-body text-center p-4">
+                                            <i class="bi bi-exclamation-triangle-fill text-danger mb-3" style="font-size: 3rem;"></i>
+                                            <h4 class="card-title text-danger mb-3">Application Error</h4>
+                                            <p class="card-text text-muted mb-4">
+                                                An unexpected error has occurred. The application will attempt to recover automatically.
+                                            </p>
+                                            <div class="d-grid gap-2 d-md-block">
+                                                <button class="btn btn-primary" @onclick="RecoverFromError">
+                                                    <i class="bi bi-arrow-clockwise me-2"></i>Try Again
+                                                </button>
+                                                <a href="/" class="btn btn-outline-secondary">
+                                                    <i class="bi bi-house me-2"></i>Go Home
+                                                </a>
+                                            </div>
+                                            <details class="mt-4 text-start">
+                                                <summary class="text-muted small">Technical Details</summary>
+                                                <pre class="text-danger small mt-2">@exception.Message</pre>
+                                            </details>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>
+        </CascadingValue>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="_framework/blazor.web.js"></script>
+</body>
+
+</html>
+
+@code {
+    private ErrorBoundary? errorBoundary;
+
+    protected override void OnParametersSet()
+    {
+        // Reset error boundary on navigation
+        errorBoundary?.Recover();
+    }
+
+    private void RecoverFromError()
+    {
+        errorBoundary?.Recover();
+    }
+}

@@ -1,0 +1,215 @@
+@page "/employees"
+@using accapp001.Properties.Models
+@using accapp001.Data
+@using Microsoft.EntityFrameworkCore
+@rendermode InteractiveServer
+
+<PageTitle>Employee Management</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0 text-azure-dark">
+                    <i class="bi bi-people-fill me-2"></i>Employee Management
+                </h1>
+                <button class="btn btn-azure" type="button" @onclick="ShowAddForm">
+                    <i class="bi bi-plus-circle me-1"></i>Add Employee
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @if (showAddForm)
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card employee-form-card shadow-sm border-0">
+                    <div class="card-header bg-azure text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-person-plus me-2"></i>Add New Employee
+                        </h5>
+                        <button class="btn btn-sm btn-outline-light" type="button" @onclick="HideAddForm">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <EditForm Model="newEmployee" OnValidSubmit="AddEmployeeAsync" FormName="AddEmployeeForm">
+                            <DataAnnotationsValidator />
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Full Name</label>
+                                    <InputText class="form-control" @bind-Value="newEmployee.Name" placeholder="Enter full name" />
+                                    <ValidationMessage For="() => newEmployee.Name" class="validation-message" />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Email Address</label>
+                                    <InputText class="form-control" @bind-Value="newEmployee.Email" placeholder="name@company.com" />
+                                    <ValidationMessage For="() => newEmployee.Email" class="validation-message" />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Department</label>
+                                    <InputSelect class="form-select" @bind-Value="newEmployee.Department">
+                                        <option value="">Select Department</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                        <option value="Human Resources">Human Resources</option>
+                                        <option value="Finance">Finance</option>
+                                        <option value="Marketing">Marketing</option>
+                                        <option value="Operations">Operations</option>
+                                        <option value="Sales">Sales</option>
+                                    </InputSelect>
+                                    <ValidationMessage For="() => newEmployee.Department" class="validation-message" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <InputCheckbox class="form-check-input" @bind-Value="newEmployee.IsActive" />
+                                        <label class="form-check-label">Active Employee</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3 text-end">
+                                    <button class="btn btn-secondary me-2" type="button" @onclick="ResetForm">
+                                        <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                                    </button>
+                                    <button class="btn btn-azure" type="submit" disabled="@isSubmitting">
+                                        @if (isSubmitting)
+                                        {
+                                            <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                            <span>Adding...</span>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-check-circle me-1"></i>
+                                            <span>Add Employee</span>
+                                        }
+                                    </button>
+                                </div>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card employee-table-card shadow-sm border-0">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-table me-2"></i>Employee Directory
+                        <span class="badge bg-azure ms-2">@employees.Count</span>
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-secondary" @onclick="RefreshEmployeesAsync">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    @if (isLoading)
+                    {
+                        <div class="employee-loading">
+                            <div class="spinner-border text-azure" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2 mb-0">Loading employees...</p>
+                        </div>
+                    }
+                    else if (employees.Count == 0)
+                    {
+                        <div class="employee-empty">
+                            <i class="bi bi-people display-1"></i>
+                            <p class="mb-0">No employees found. Add your first employee to get started.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table employee-table table-hover table-striped mb-0">
+                                <thead class="table-azure">
+                                    <tr>
+                                        <th scope="col">
+                                            <i class="bi bi-person me-1"></i>Name
+                                        </th>
+                                        <th scope="col">
+                                            <i class="bi bi-envelope me-1"></i>Email
+                                        </th>
+                                        <th scope="col">
+                                            <i class="bi bi-building me-1"></i>Department
+                                        </th>
+                                        <th scope="col">
+                                            <i class="bi bi-calendar me-1"></i>Created
+                                        </th>
+                                        <th scope="col">
+                                            <i class="bi bi-check-circle me-1"></i>Status
+                                        </th>
+                                        <th scope="col" class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var employee in employees)
+                                    {
+                                        <tr>
+                                            <td class="fw-medium">
+                                                @employee.Name
+                                            </td>
+                                            <td>
+                                                <a href="mailto:@employee.Email" class="text-decoration-none">
+                                                    @employee.Email
+                                                </a>
+                                                <br />
+                                                <small class="text-muted">@employee.EmailDomain</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-light text-dark border">
+                                                    @employee.Department
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="text-nowrap">@employee.CreatedDate.ToString("MMM dd, yyyy")</span>
+                                                <br />
+                                                <small class="text-muted">@employee.DaysSinceCreated days ago</small>
+                                            </td>
+                                            <td>
+                                                @if (employee.IsActive)
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-check-circle me-1"></i>Active
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">
+                                                        <i class="bi bi-pause-circle me-1"></i>Inactive
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button class="btn btn-outline-azure" type="button" 
+                                                            @onclick="() => ToggleEmployeeStatusAsync(employee)" 
+                                                            title="@(employee.IsActive ? "Deactivate" : "Activate")">
+                                                        <i class="bi @(employee.IsActive ? "bi-pause" : "bi-play")"></i>
+                                                    </button>
+                                                    <button class="btn btn-outline-danger" type="button" 
+                                                            @onclick="() => DeleteEmployeeAsync(employee)" 
+                                                            title="Delete Employee">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
